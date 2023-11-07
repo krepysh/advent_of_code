@@ -25,10 +25,20 @@ def is_nested(r1: tuple[int, int], r2: tuple[int, int]) -> bool:
     return r1[0] <= r2[0] and r1[1] >= r2[1]
 
 
+def is_overlap(r1: tuple[int, int], r2: tuple[int, int]) -> bool:
+    for val in r2:
+        if r1[0] <= val <= r1[1]:
+            return True
+    return False
+
+
 part1 = 0
+part2 = 0
 for interval in intervals:
     first, second = prepare_pair(interval)
     if is_nested(first, second) or is_nested(second, first):
         part1 += 1
+    part2 += is_overlap(first, second) or is_overlap(second, first)
 
 print(part1)
+print(part2)
