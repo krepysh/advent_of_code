@@ -16,29 +16,51 @@ class Point:
         return Point(self.x - other.x, self.y - other.y)
 
 
-head, tail = Point(), Point()
+class Rope:
+    def __init__(self, len=2):
+        self.segments = []
+        for _ in range(2):
+            self.segments.append(Point())
+        self.head = self.segments[-1]
+        self.tail = self.segments[0]
+
+    def adjust_to_head(self):
+        if self.head.distance(self.tail) > 1:
+            vector = self.head.vect_distance(self.tail)
+            if vector.x == 0 or vector.y == 0:
+                self.tail.x = self.tail.x + vector.x // 2
+                self.tail.y = self.tail.y + vector.y // 2
+            else:
+                self.tail.x = self.tail.x + vector.x // abs(vector.x)
+                self.tail.y = self.tail.y + vector.y // abs(vector.y)
+
+    def up(self):
+        self.head.y += 1
+        self.adjust_to_head()
+
+    def down(self):
+        self.head.y -= 1
+        self.adjust_to_head()
+
+    def right(self):
+        self.head.x += 1
+        self.adjust_to_head()
+
+    def left(self):
+        self.head.x -= 1
+        self.adjust_to_head()
+
+
+rope = Rope()
+movements = {'R': rope.right, 'L': rope.left, 'U': rope.up, 'D': rope.down}
 visited = set()
 for move in lines:
     direction, num = move.strip().split()
     num = int(num)
     while num > 0:
-        if direction == 'R':
-            head.x += 1
-        elif direction == 'L':
-            head.x -= 1
-        elif direction == 'U':
-            head.y += 1
-        elif direction == 'D':
-            head.y -= 1
+        method_to_call = movements[direction]
+        method_to_call()
         num -= 1
-        if head.distance(tail) > 1:
-            vector = head.vect_distance(tail)
-            if vector.x == 0 or vector.y == 0:
-                tail.x = tail.x + vector.x // 2
-                tail.y = tail.y + vector.y // 2
-            else:
-                tail.x = tail.x + vector.x // abs(vector.x)
-                tail.y = tail.y + vector.y // abs(vector.y)
-        visited.add((tail.x, tail.y))
+        visited.add((rope.tail.x, rope.tail.y))
 
 print(len(visited))
