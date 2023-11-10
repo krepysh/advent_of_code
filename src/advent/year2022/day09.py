@@ -1,5 +1,8 @@
 from advent import read_input
 
+SIZE = 400
+s_x, s_y = SIZE // 2, SIZE - 1 - SIZE//2
+
 lines = read_input('day09.txt')
 
 
@@ -20,24 +23,26 @@ class Point:
 
 
 class Rope:
-    def __init__(self, len=2):
+    def __init__(self, rope_len=2):
         self.segments = []
-        for i in range(2):
-            self.segments.append(Point(label=str(i + 1)))
+        for i in range(rope_len):
+            self.segments.append(Point(label=str(rope_len - 1 - i)))
         self.head = self.segments[-1]
         self.head.label = 'H'
         self.tail = self.segments[0]
-        self.tail.label = 'T'
 
     def adjust_to_head(self):
-        if self.head.distance(self.tail) > 1:
-            vector = self.head.vect_distance(self.tail)
-            if vector.x == 0 or vector.y == 0:
-                self.tail.x = self.tail.x + vector.x // 2
-                self.tail.y = self.tail.y + vector.y // 2
-            else:
-                self.tail.x = self.tail.x + vector.x // abs(vector.x)
-                self.tail.y = self.tail.y + vector.y // abs(vector.y)
+        for i in range(len(self.segments) - 2, -1, -1):
+            current = self.segments[i]
+            closer_to_head = self.segments[i + 1]
+            if closer_to_head.distance(current) > 1:
+                vector = closer_to_head.vect_distance(current)
+                if vector.x == 0 or vector.y == 0:
+                    current.x = current.x + vector.x // 2
+                    current.y = current.y + vector.y // 2
+                else:
+                    current.x = current.x + vector.x // abs(vector.x)
+                    current.y = current.y + vector.y // abs(vector.y)
 
     def up(self):
         self.head.y += 1
@@ -56,42 +61,46 @@ class Rope:
         self.adjust_to_head()
 
 
-def print_rope(rope: Rope, size=40):
+def print_rope(rope: Rope, size=SIZE):
     field = [['.'] * size for _ in range(size)]
-    s_x, s_y = 10, size - 1 - 5
     for point in rope.segments:
-        field[s_y - point.y][point.x + s_x] = str(point)
+        try:
+            field[s_y - point.y][point.x + s_x] = str(point)
+        except IndexError:
+            pass
     field[s_y][s_x] = 's'
     for line in field:
         print(''.join(line))
     print()
 
 
-def print_visited(visted: set[tuple[int, int]], size=40):
+def print_visited(visted: set[tuple[int, int]], size=SIZE):
     field = [['.'] * size for _ in range(size)]
-    s_x, s_y = 10, size - 1 - 5
     for x, y in visted:
-        field[s_y - y][x + s_x] = '#'
+        try:
+            field[s_y - y][x + s_x] = '#'
+        except IndexError:
+            pass
     field[s_y][s_x] = 's'
     for line in field:
         print(''.join(line))
     print()
 
 
-rope = Rope()
-print_rope(rope)
+rope = Rope(rope_len=10)
+# print_rope(rope)
 movements = {'R': rope.right, 'L': rope.left, 'U': rope.up, 'D': rope.down}
 visited = set()
 for move in lines:
     direction, num = move.strip().split()
-    print(f'== {direction} {num} ==\n')
+    # print(f'== {direction} {num} ==\n')
     num = int(num)
     while num > 0:
         method_to_call = movements[direction]
         method_to_call()
         num -= 1
         visited.add((rope.tail.x, rope.tail.y))
-    print_rope(rope)
+    # print_rope(rope)
 
-print(len(visited))
 print_visited(visited)
+print(len(visited))
