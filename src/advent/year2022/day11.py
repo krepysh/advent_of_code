@@ -16,7 +16,7 @@ class Monkey:
         worry_level = self.items.pop(0)
         old = worry_level
         new = eval(self.operation)
-        new = new // 3
+        # new = new // 3
         to_monkey = self.if_true if new % self.divisible_by == 0 else self.if_false
         self.counter += 1
         return new, to_monkey
@@ -42,11 +42,19 @@ class Playground:
         for monkey in self.monkeys:
             while monkey.items:
                 item, to_monkey = monkey.inspect()
+                item = item % self.get_least_common_multiple()
                 self.monkeys[to_monkey].items.append(item)
+
+    def get_least_common_multiple(self):
+        res = 1
+        for m in self.monkeys:
+            res *= m.divisible_by
+        return res
 
     def get_highest_scores(self):
         scores = [m.counter for m in self.monkeys]
         scores.sort(reverse=True)
+        print(scores)
         return scores[0] * scores[1]
 
 
@@ -54,7 +62,7 @@ playground = Playground()
 for group in lines:
     playground.monkeys.append(parse_monkey(group))
 
-for i in range(20):
+for i in range(10000):
     playground.run_round()
 
 print(playground.get_highest_scores())
