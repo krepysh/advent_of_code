@@ -37,6 +37,10 @@ def get_neighbours(i, j):
 
 
 def get_distance(start, end):
+    """Return min distance, or -1 if path not found.
+
+    Dijkstra algorythm.
+    """
     visited = set()
     heap = [(0, start)]
     while True:
@@ -53,3 +57,14 @@ def get_distance(start, end):
 
 
 print('Part 1, distance:', get_distance(start, end))
+
+distances = []
+row_num = 0
+for row_num in range(len(maze)):
+    for j in range(len(maze[0])):
+        if maze[row_num][j] == 'a':
+            dist = get_distance((row_num, j), end)
+            if dist > 0:
+                heapq.heappush(distances, dist)
+
+print('Part 2, min ditance:', heapq.nsmallest(1, distances)[0])
