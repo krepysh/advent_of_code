@@ -35,15 +35,21 @@ def get_neighbours(i, j):
                 neibs.append((y, x))
     return neibs
 
-visited = set()
-heap = [(0, start)]
-while True:
-    current_dist, current_coord = heapq.heappop(heap)
-    if current_coord == end:
-        print('Part 1, distance:', current_dist)
-        break
-    if current_coord in visited:
-        continue
-    for neib in get_neighbours(*current_coord):
-        heapq.heappush(heap, (current_dist + 1, neib))
-    visited.add(current_coord)
+
+def get_distance(start, end):
+    visited = set()
+    heap = [(0, start)]
+    while True:
+        if not heap:
+            return -1
+        current_dist, current_coord = heapq.heappop(heap)
+        if current_coord == end:
+            return current_dist
+        if current_coord in visited:
+            continue
+        for neib in get_neighbours(*current_coord):
+            heapq.heappush(heap, (current_dist + 1, neib))
+        visited.add(current_coord)
+
+
+print('Part 1, distance:', get_distance(start, end))
