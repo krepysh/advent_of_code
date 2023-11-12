@@ -1,6 +1,5 @@
 from advent import read_input
 
-
 lines = read_input('day14.txt')
 
 filled = set()
@@ -31,22 +30,32 @@ for rock_formation in coordinates:
 
 # y coord of the lowest rock, everything underneath of it is the abyss
 start_of_tar_tar_tarary = max([c[1] for c in filled])
+floor = start_of_tar_tar_tarary + 2
+
+
+def is_empty(x, y):
+    if y == floor:
+        return False
+    if (x, y) in filled:
+        return False
+    return True
 
 
 def simulation_round(field: set[tuple[int, int]]):
     x, y = 500, 0
-    while y < start_of_tar_tar_tarary:
+    while True:
+        if not is_empty(x, y):
+            return False
         y = y + 1
-        if (x, y + 1) not in field:
+        if is_empty(x, y):
             pass
-        elif (x - 1, y + 1) not in field:
+        elif is_empty(x - 1, y):
             x = x - 1
-        elif (x + 1, y + 1) not in field:
+        elif is_empty(x + 1, y):
             x = x + 1
         else:
-            field.add((x, y))
+            field.add((x, y - 1))
             return True
-    return False
 
 
 i = 0
