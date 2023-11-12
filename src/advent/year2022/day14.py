@@ -15,8 +15,9 @@ for line in lines:
     coordinates.append(current)
 
 
-def in_order(start: int, stop: int):
-    return (stop, start + 1) if stop < start else (start, stop + 1)
+def my_range(start: int, stop: int):
+    start, stop = (stop, start + 1) if stop < start else (start, stop + 1)
+    return range(start, stop)
 
 
 for rock_formation in coordinates:
@@ -24,8 +25,8 @@ for rock_formation in coordinates:
         start_x, start_y = rock_formation[i - 1]
         end_x, end_y = rock_formation[i]
 
-        for x in range(*in_order(start_x, end_x)):
-            for y in range(*in_order(start_y, end_y)):
+        for x in my_range(start_x, end_x):
+            for y in my_range(start_y, end_y)   :
                 filled.add((x, y))
 
 # y coord of the lowest rock, everything underneath of it is the abyss
