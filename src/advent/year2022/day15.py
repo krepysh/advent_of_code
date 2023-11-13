@@ -24,7 +24,7 @@ for line in lines:
     distance = manhattan_distance(sensor_pos, beacon_pos)
     exclusion_zones.append((sensor_pos, distance))
 
-line_y = 2000003
+line_y = 11
 
 busy = []
 for center, distance in exclusion_zones:
@@ -53,3 +53,18 @@ def merge_intervals(busy):
 busy = merge_intervals(busy)
 res = sum([i[1] - i[0] for i in busy])
 print(res)
+
+
+# part 2
+def l2(p1, p2):
+    return ((p1[0] - p2[0])**2 + (p1[1] - p2[1])**2) ** (1/2)
+
+
+for i in range(len(exclusion_zones)):
+    for j in range(i + 1, len(exclusion_zones)):
+        z1_center, z1_distance = exclusion_zones[i]
+        z2_center, z2_distance = exclusion_zones[j]
+        d = manhattan_distance(z2_center, z1_center)
+        if d - z1_distance - z2_distance == 2:
+            ratio = l2(z1_center, (0, 0)) / l2(z1_center, z2_center)
+            print(z1_center[0] + (z1_center[0] - z2_center[0])*ratio, z1_center[1] + (z1_center[1] - z2_center[1]) * ratio)
