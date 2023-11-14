@@ -3,8 +3,8 @@ BAR_SHAPE = [(0, 0), (1, 0), (2, 0), (3, 0)]
 L_SHAPE = [(0, 0), (1, 0), (2, 0), (2, 1), (2, 2)]
 CROSS_SHAPE = [(1, 0), (0, 1), (1, 1), (2, 1), (1, 2)]
 I_SHAPE = [(0, 0), (0, 1), (0, 2), (0, 3)]
-SQUAER_SHAPE = [(0, 0), (1, 0), (0, 1), (1, 1)]
-FIGURES = [BAR_SHAPE, CROSS_SHAPE, L_SHAPE, I_SHAPE, SQUAER_SHAPE]
+SQUARE_SHAPE = [(0, 0), (1, 0), (0, 1), (1, 1)]
+FIGURES = [BAR_SHAPE, CROSS_SHAPE, L_SHAPE, I_SHAPE, SQUARE_SHAPE]
 
 
 class Piece:
@@ -21,7 +21,6 @@ class Piece:
         self.pos = (self.pos[0], self.pos[1] - 1)
 
     def can_move_down(self):
-        print(self.pos)
         original_pos = self.pos
         self.move_down()
         rv = True
@@ -37,15 +36,11 @@ class Piece:
         # self._coords = []
 
 
-class Game:
+class Board:
     def __init__(self):
         self.width = WIDTH
         self.max_height = 0
         self.grid = []
-        self.current_figure_ind = 0
-        self.active_block = None
-        self.is_block_active = False
-        self.block_pos = [0, 0]
 
     def get_val(self, x, y):
         if y < 0:
@@ -72,20 +67,8 @@ class Game:
             rv = self.grid[i][::]
         return rv
 
-    def new_block(self):
-        for _ in range(3):
-            self.grid.append([False] * self.width)
-        self.active_block = FIGURES[self.current_figure_ind]
-        self.is_block_active = True
-        self.block_pos = [2, len(self.grid) + 1]
 
-    def tick(self):
-        self.block_pos[1] = self.block_pos[1] - 1
-        if self.block_pos[1] == 0:
-            self.is_block_active = False
-
-
-def print_board(board: Game, piece: Piece):
+def print_board(board: Board, piece: Piece):
     s = ''
     piece_blocks = piece.absolute_coords()
     key = lambda x: x[1]
@@ -103,7 +86,7 @@ def print_board(board: Game, piece: Piece):
 
 
 if __name__ == '__main__':
-    board = Game()
+    board = Board()
     for _ in range(3):
         for fig in FIGURES:
             piece = Piece(board=board, coords=fig)
