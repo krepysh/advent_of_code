@@ -31,6 +31,19 @@ class Piece:
         self.pos = original_pos
         return rv
 
+    def move_left(self):
+        # we don't need key because of how python compare tuples
+        min_x = min(self.absolute_coords())[0]
+        if min_x > 0:
+            self.pos = (self.pos[0] - 1, self.pos[1])
+
+    def move_right(self):
+        # we don't need key because of how python compare tuples
+        max_x = max(self.absolute_coords())[0]
+        if max_x < WIDTH - 1:
+            self.pos = (self.pos[0] + 1, self.pos[1])
+
+
     def finish(self):
         self.board.setvals(self.absolute_coords())
         # self._coords = []
@@ -87,10 +100,16 @@ def print_board(board: Board, piece: Piece):
 
 if __name__ == '__main__':
     board = Board()
+    i = 0
     for _ in range(3):
         for fig in FIGURES:
+            i += 1
             piece = Piece(board=board, coords=fig)
             while piece.can_move_down():
+                if i % 2 == 1:
+                    piece.move_left()
+                else:
+                    piece.move_right()
                 piece.move_down()
                 s = print_board(board, piece)
                 print(s)
