@@ -83,3 +83,15 @@ print(res)
 # part 2
 
 nodes: list[ListNode] = read_input('day20.txt', convert_to=ListNode)
+zero = prepare_nodes(nodes, multiplicator=811589153)
+for round_number in range(10):
+    mix(nodes)
+assert check_linked_list_len(zero) == 5000
+res = 0
+for shift in (1000, 2000, 3000):
+    coord = zero
+    for _ in range(shift):
+        coord = coord.right
+    num = coord.val
+    res += num
+print(res)
