@@ -23,6 +23,16 @@ def apply_map_to_collection(seeds: list[int], current_map: list[tuple[int, int, 
     return rv
 
 
+def apply_map_to_intervals(intervals_seeds: list[tuple[int, int]], current_map: list[tuple[int, int, int]]):
+    rv = []
+    map_dst_start, map_src_start, range_len = current_map
+    for int_start, int_end in intervals_seeds:
+        intersection_begin = max(int_start, map_src_start)
+        intersection_end = min(int_end, map_src_start + range_len)
+        if intersection_end > intersection_begin:
+            rv.append((intersection_begin, intersection_end))
+
+
 seeds, *raw_maps = read_input('day05.txt', by_group=True)
 maps = []
 for r_map in raw_maps:
@@ -34,9 +44,16 @@ for r_map in raw_maps:
     maps.append(current_map)
 seeds = extract_list_int(seeds)
 
-locations = []
+intervals_seeds = []
+for i in range(0, len(seeds), 2):
+    intervals_seeds.append((seeds[i], seeds[i] + seeds[i+1]))
+print(intervals_seeds)
+
+
+
 
 for current_map in maps:
     seeds = apply_map_to_collection(seeds, current_map)
+    intervals_seeds = apply_map_to_intervals(intervals_seeds, current_map)
 
 print(min(seeds))
