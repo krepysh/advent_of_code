@@ -16,6 +16,13 @@ def apply_map(value: int, current_map: list[tuple[int, int, int]]):
     return value
 
 
+def apply_map_to_collection(seeds: list[int], current_map: list[tuple[int, int, int]]):
+    rv = []
+    for value in seeds:
+        rv.append(apply_map(value, current_map))
+    return rv
+
+
 seeds, *raw_maps = read_input('day05.txt', by_group=True)
 maps = []
 for r_map in raw_maps:
@@ -28,10 +35,8 @@ for r_map in raw_maps:
 seeds = extract_list_int(seeds)
 
 locations = []
-for seed in seeds:
-    val = seed
-    for current_map in maps:
-        val = apply_map(val, current_map)
-    locations.append(val)
 
-print(min(locations))
+for current_map in maps:
+    seeds = apply_map_to_collection(seeds, current_map)
+
+print(min(seeds))
