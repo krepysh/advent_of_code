@@ -25,12 +25,27 @@ def apply_map_to_collection(seeds: list[int], current_map: list[tuple[int, int, 
 
 def apply_map_to_intervals(intervals_seeds: list[tuple[int, int]], current_map: list[tuple[int, int, int]]):
     rv = []
-    map_dst_start, map_src_start, range_len = current_map
-    for int_start, int_end in intervals_seeds:
-        intersection_begin = max(int_start, map_src_start)
-        intersection_end = min(int_end, map_src_start + range_len)
-        if intersection_end > intersection_begin:
-            rv.append((intersection_begin, intersection_end))
+    while intervals_seeds:
+        int_start, int_end = intervals_seeds.pop()
+        has_intersection = False
+        for single_map in current_map:
+            map_dst_start, map_src_start, range_len = single_map
+            intersection_begin = max(int_start, map_src_start)
+            intersection_end = min(int_end, map_src_start + range_len)
+            if intersection_end > intersection_begin:
+                has_intersection = True
+                # we found intersection, it needed to be mapped
+                shift = map_dst_start - map_src_start
+                rv.append((shift + intersection_begin, shift + intersection_end))
+                # rest of the range add to the queue to process later
+                if intersection_begin == int_start:
+                    intervals_seeds.append((intersection_end, int_end))
+                elif intersection_end == int_end:
+                    intervals_seeds.append((int_start, intersection_begin))
+                break
+        if not has_intersection:
+            rv.append((int_start, int_end))
+    return rv
 
 
 seeds, *raw_maps = read_input('day05.txt', by_group=True)
@@ -47,13 +62,11 @@ seeds = extract_list_int(seeds)
 intervals_seeds = []
 for i in range(0, len(seeds), 2):
     intervals_seeds.append((seeds[i], seeds[i] + seeds[i+1]))
-print(intervals_seeds)
-
-
-
 
 for current_map in maps:
-    seeds = apply_map_to_collection(seeds, current_map)
-    intervals_seeds = apply_map_to_intervals(intervals_seeds, current_map)
+    seeds = apply_map_to_collection(seeds, current_map)  # part 1
+    intervals_seeds = apply_map_to_intervals(intervals_seeds, current_map)  # part 2
 
 print(min(seeds))
+print(intervals_seeds)
+print(min(intervals_seeds))
