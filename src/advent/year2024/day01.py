@@ -1,7 +1,7 @@
 from typing import Tuple
 
 
-def read_indput() -> Tuple[list[int], list[int]]:
+def read_input() -> Tuple[list[int], list[int]]:
     left, right = [], []
     with open("day01.txt") as fp:
         for line in fp.readlines():
@@ -12,8 +12,6 @@ def read_indput() -> Tuple[list[int], list[int]]:
 
 
 def calculate_distance(left: list[int], right: list[int]) -> int:
-    left.sort()
-    right.sort()
     distance = 0
     for number_left, number_right in zip(left, right):
         distance += abs(number_right - number_left)
@@ -28,6 +26,10 @@ def calculate_similarity_score(left: list[int], right: list[int]) -> int:
 
 
 if __name__ == "__main__":
-    part1 = calculate_distance(*read_indput())
-    part2 = calculate_similarity_score(*read_indput())
-    print(part2)
+    left, right = read_input()
+    left.sort()
+    right.sort()
+    part1 = calculate_distance(left, right)
+    part2 = calculate_similarity_score(left, right)
+    print(f"Part 1 answer: {part1}")
+    print(f"Part 2 answer: {part2}")
