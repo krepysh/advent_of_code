@@ -8,30 +8,13 @@ def read_reports() -> list[list[int]]:
     return reports
 
 
-def is_report_safe(report: list[int], tolerate_first_bad=False):
-    prev = report[0]
-    prev_diff = report[1] - prev
+def is_report_safe(report: list[int]):
+    diffs = []
     for i in range(1, len(report)):
-        current = report[i]
-        diff = current - prev
-        if abs(diff) > 3 or diff == 0:
-            if tolerate_first_bad:
-                tolerate_first_bad = False
-                continue
-            return False
-        if diff // abs(diff) != prev_diff // abs(prev_diff):
-            if tolerate_first_bad:
-                tolerate_first_bad = False
-                continue
-            return False
-        prev_diff = diff
-        prev = current
-    return True
+        diffs.append(report[i - 1] - report[i])
+    return all(1 <= diff <= 3 for diff in diffs) or all(-1 >= diff >= -3 for diff in diffs)
 
 
-if __name__ == "__main__":
-    for r in read_reports():
-        print(r)
-        print(is_report_safe(r, tolerate_first_bad=True))
-    # part 2
-    print(sum([is_report_safe(r, tolerate_first_bad=True) for r in read_reports()]))
+reports = read_reports()
+print(sum(is_report_safe(r) for r in reports))
+print(sum([1 for r in reports if any([is_report_safe(r[:i] + r[i + 1:]) for i in range(len(r))])]))
