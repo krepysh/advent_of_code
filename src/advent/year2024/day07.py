@@ -9,7 +9,7 @@ def is_feasible(target, equation: list[int]):
     if len(equation) == 1:
         return equation[0] == target
     first, second = equation[:2]
-    return is_feasible(target, [first + second] +  equation[2::]) or is_feasible(target, [first * second] + equation[2::]) or is_feasible(target, [int(str(first) + str(second))] + equation[2::])
+    return is_feasible(target, [first + second] +  equation[2::]) or is_feasible(target, [first * second] + equation[2::]) or is_feasible(target, [int(f"{first}{second}")] + equation[2::])
 
 
 res = 0
