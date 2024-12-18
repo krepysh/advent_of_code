@@ -50,5 +50,4 @@ def bin_search(start, stop):
 
 ans = bin_search(1, len(corrupteds))
 print(ans)
-r,c=corrupteds[ans - 1]
-print(f"{r},{c}")
+print(*corrupteds[ans - 1], sep=",")
