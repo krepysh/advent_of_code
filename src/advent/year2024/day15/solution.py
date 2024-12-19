@@ -1,6 +1,6 @@
-grid, moves = open(0).read().split('\n\n')
-moves = "".join(m.strip() for m in moves)
-grid = [list(line.strip()) for line in grid.split()]
+top, bottom = open(0).read().split('\n\n')
+moves = "".join(m.strip() for m in bottom)
+grid = [list(line.strip()) for line in top.split()]
 
 rows = len(grid)
 cols = len(grid[0])
