@@ -4,7 +4,7 @@ keys, locks = [], []
 
 
 def parse(item):
-    key = tuple(row.count("#") - 1 for row in zip(*item[1:]))
+    key = tuple(row.count("#") - 1 for row in zip(*item))
     return key
 
 
@@ -18,6 +18,6 @@ for item in all_items:
 res = 0
 for key in keys:
     for lock in locks:
-        if all(a + b < 5 for a, b in zip(key, lock)):
+        if all(a + b <= 5 for a, b in zip(key, lock)):
             res += 1
 print(res)
